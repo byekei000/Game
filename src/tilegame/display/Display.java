@@ -1,3 +1,5 @@
+package tilegame.display;
+
 import javax.swing.JFrame;
 import java.awt.*;
 
@@ -31,5 +33,9 @@ public class Display {
 
         frame.add(canvas);
         frame.pack();
+    }
+
+    public Canvas getCanvas(){
+        return canvas;
     }
 }
