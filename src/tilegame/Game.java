@@ -2,6 +2,7 @@ package tilegame;
 
 import tilegame.display.Display;
 import tilegame.gfx.Assets;
+import tilegame.input.KeyManager;
 import tilegame.states.GameState;
 import tilegame.states.MenuState;
 import tilegame.states.State;
@@ -24,25 +25,31 @@ public class Game implements Runnable{
     private State gameState;
     private State menuState;
 
+    //Input
+    private KeyManager keyManager;
+
     public Game(String title, int width, int height){
         this.title = title;
         this.width = width;
         this.height = height;
+        keyManager = new KeyManager();
     }
 
     private void initiate(){
         display = new Display(title, width, height);
+        display.getFrame().addKeyListener(keyManager);
         Assets.init();
 
-        gameState = new GameState();
-        menuState = new MenuState();
+        gameState = new GameState(this);
+        menuState = new MenuState(this);
         State.setState(gameState);
     }
 
     private void tick(){
-        if(State.getState() != null){
+        keyManager.tick();
+
+        if(State.getState() != null)
             State.getState().tick();
-        }
     }
 
     private void render(){
@@ -91,6 +98,10 @@ public class Game implements Runnable{
             }
         }
         stop();
+    }
+
+    public KeyManager getKeyManager(){
+        return keyManager;
     }
 
     public synchronized void start(){
