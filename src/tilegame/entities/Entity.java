@@ -1,4 +1,4 @@
-package tilegame.tilegame.entities;
+package tilegame.entities;
 
 import java.awt.*;
 

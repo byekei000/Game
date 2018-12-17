@@ -15,12 +15,13 @@ public class Display {
         this.title = title;
         this.width = width;
         this.height = height;
+
         createDisplay();
     }
 
     private void createDisplay(){
         frame = new JFrame(title);
-        frame.setSize(width,height);
+        frame.setSize(width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -43,4 +44,5 @@ public class Display {
     public JFrame getFrame(){
         return frame;
     }
+
 }

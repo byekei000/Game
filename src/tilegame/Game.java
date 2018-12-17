@@ -10,16 +10,17 @@ import tilegame.states.State;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
-public class Game implements Runnable{
+public class Game implements Runnable {
 
     private Display display;
-    private Thread thread;
-    private BufferStrategy bs;
-    private Graphics g;
+    public int width, height;
+    public String title;
 
     private boolean running = false;
-    public String title;
-    public int width, height;
+    private Thread thread;
+
+    private BufferStrategy bs;
+    private Graphics g;
 
     //States
     private State gameState;
@@ -29,13 +30,13 @@ public class Game implements Runnable{
     private KeyManager keyManager;
 
     public Game(String title, int width, int height){
-        this.title = title;
         this.width = width;
         this.height = height;
+        this.title = title;
         keyManager = new KeyManager();
     }
 
-    private void initiate(){
+    private void init(){
         display = new Display(title, width, height);
         display.getFrame().addKeyListener(keyManager);
         Assets.init();
@@ -59,18 +60,21 @@ public class Game implements Runnable{
             return;
         }
         g = bs.getDrawGraphics();
-        g.clearRect(0,0,width,height);
-        //draw here
-        if(State.getState() != null){
+        //Clear Screen
+        g.clearRect(0, 0, width, height);
+        //Draw Here!
+
+        if(State.getState() != null)
             State.getState().render(g);
-        }
-        //
+
+        //End Drawing!
         bs.show();
         g.dispose();
     }
 
     public void run(){
-        initiate();
+
+        init();
 
         int fps = 60;
         double timePerTick = 1000000000 / fps;
@@ -85,19 +89,23 @@ public class Game implements Runnable{
             delta += (now - lastTime) / timePerTick;
             timer += now - lastTime;
             lastTime = now;
-            if(delta >= 1) {
+
+            if(delta >= 1){
                 tick();
                 render();
                 ticks++;
                 delta--;
             }
+
             if(timer >= 1000000000){
-                System.out.println("FPS: " + ticks);
+                System.out.println("Ticks and Frames: " + ticks);
                 ticks = 0;
                 timer = 0;
             }
         }
+
         stop();
+
     }
 
     public KeyManager getKeyManager(){
@@ -105,21 +113,22 @@ public class Game implements Runnable{
     }
 
     public synchronized void start(){
-        if(running){
+        if(running)
             return;
-        }
         running = true;
         thread = new Thread(this);
         thread.start();
     }
-    public synchronized void stop() {
-        if(!running){
+
+    public synchronized void stop(){
+        if(!running)
             return;
-        }
+        running = false;
         try {
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
 }
